@@ -1,0 +1,29 @@
+body {
+    background: var(--bg-body);
+}
+
+blockquote {
+    border-left: solid 3px var(--q-primary);
+    font-style: italic;
+    margin: 0 0 1em 1em;
+    padding: 0.5em 0 0.5em 2em;
+}
+
+a:not([role]) {
+    transition: color 0.2s ease-in-out, border-bottom-color 0.2s ease-in-out;
+    border-bottom: dotted 1px;
+    color: var(--q-primary);
+    text-decoration: none;
+
+    &:hover {
+        border-bottom-color: var(--q-primary-dark);
+        color: var(--q-primary-dark);
+    }
+}
+
+.image {
+    max-width: 600px;
+    border-radius: 0.375em;
+    border: 0;
+    margin: 0 0 2em 0;
+}

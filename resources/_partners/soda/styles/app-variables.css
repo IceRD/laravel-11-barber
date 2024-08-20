@@ -1,0 +1,17 @@
+:root {
+    --q-primary-dark: #02504c;
+
+    --bg-body: #F2F4F4;
+    --bg-sidebar: #E8F4E7;
+    --text-sidebar-level-1: #3D4449;
+    --text-sidebar-level-2: #565e64;
+
+    --positive-1: rgba(118, 182, 103, 0.1);
+    --positive-2: rgba(118, 182, 103, 0.2);
+    --positive-3: rgba(118, 182, 103, 0.3);
+
+    --negative-1: rgba(188, 50, 89, 0.1);
+    --negative-2: rgba(188, 50, 89, 0.2);
+    --negative-3: rgba(188, 50, 89, 0.3);
+}
+

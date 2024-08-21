@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Partner;
 
 class User extends Authenticatable
 {
@@ -85,6 +87,11 @@ class User extends Authenticatable
      */
     public function isSysAdmin(): bool {
         return $this->role == $this->roles['sysadmin'];
+    }
+
+    public function partner(): HasOne
+    {
+        return $this->hasOne(Partner::class, 'id');
     }
 
 }

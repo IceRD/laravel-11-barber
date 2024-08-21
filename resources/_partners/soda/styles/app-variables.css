@@ -1,8 +1,12 @@
 :root {
+    --layout-offset: 194px;
+
     --q-primary-dark: #02504c;
 
     --bg-body: #F2F4F4;
     --bg-sidebar: #E8F4E7;
+    --bg-section: #FFFFFF;
+    --bg-table: #FFFFFF;
     --text-sidebar-level-1: #3D4449;
     --text-sidebar-level-2: #565e64;
 

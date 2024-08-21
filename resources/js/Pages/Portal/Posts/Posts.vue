@@ -1,13 +1,13 @@
 <script setup>
 import PortalLayout from "@/Layouts/PortalLayout.vue"
-import {Head} from "@inertiajs/vue3";
-
+import Header from "@/Components/Header.vue"
 </script>
 
 <template>
     <portal-layout>
+        <Header title="Новости" />
+
         <div>
-            <Head title="Новости" />
             <div>1</div>
         </div>
     </portal-layout>

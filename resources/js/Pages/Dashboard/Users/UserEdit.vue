@@ -1,126 +1,141 @@
 <script setup>
-import { onMounted, ref} from "vue"
-import { Head } from "@inertiajs/vue3"
+import { onMounted, ref } from "vue"
 import DashboardLayout from "@/Layouts/DashboardLayout.vue"
-import {checkAdminAccount, rolesNames} from "@/utils/roles.js";
+import Header from "@components/Header.vue"
+import Section from "@/Components/Section.vue"
+import FormItem from "@/Components/FormItem.vue"
+import {router, useForm} from "@inertiajs/vue3"
+import { rolesList } from "@/utils/roles.js"
 
 const props = defineProps({
-    users: {
+    user: {
+        type: Object,
+        default: () => ({})
+    },
+    partners: {
         type: Array,
         default: () => ([])
-    },
+    }
 });
 
+const partnersList = ref([
+    {
+        id: 0,
+        name: "Не указан"
+    },
+    ...props.partners.map(partner => ({
+        id: partner.id,
+        name: partner.organization ? `${partner.name} (${partner.organization})` : partner.name
+    }))
+])
 
+const form = useForm({
+    name:        props.user.name,
+    password:    "",
+    role:        props.user.role,
+    partner_id:  props.user.partner_id,
+    is_disabled: Boolean(props.user.is_disabled),
+});
 
-const rows = ref(props.users?.data || [])
+const isPassword = ref(true)
 
-const columns = [
-    { name: 'id', align: 'left', label: '#', field: 'id', sortable: false },
-    { name: 'login', align: 'left', label: 'Логин', field: 'login', sortable: true },
-    { name: 'name', align: 'left', label: 'Имя', field: 'name', sortable: true },
-    { name: 'role', align: 'left', label: 'Роль', field: 'role', sortable: true },
-    { name: 'partner_name', align: 'left', label: 'Филиал', field: 'partner_name', sortable: true },
-    { name: 'is_disabled', align: 'center', label: 'Статус', field: 'is_disabled', sortable: false },
-    { name: 'last_activity', align: 'left', label: 'Последняя активность', field: 'last_activity', sortable: true },
-    { name: 'actions', align: 'right', label: 'Действия', field: '', sortable: false },
-]
+const submit = () => {
+    form.post(route('dashboard.users.update', { user: props.user.id }));
+};
 
-const initialPagination = {
-    sortBy: 'desc',
-    sortOrder: 'id',
-    descending: false,
-    page: 1,
-    rowsPerPage: 100
-}
+const pathBack = () => router.get(route("dashboard.users.index"))
+
 </script>
 
 <template>
     <dashboard-layout>
-        <Head title="Список пользователей" />
+        <Header
+            title="Редактирование пользователя"
+            :path-back="pathBack"
+        />
 
-            <div class="users-view">
-                <q-table
-                    :rows="rows"
-                    :columns="columns"
-                    row-key="id"
-                    :pagination="initialPagination"
-                    flat
-                    bordered
-                    class="users-table"
-                >
-                    <template v-slot:body="props">
-                        <q-tr
-                            :props="props"
-                            :class="{
-                                'is-admin': checkAdminAccount(props.row.role),
-                                'is-disabled': props.row.is_disabled
-                            }"
+        <div class="users-edit-view">
+            <q-form
+                ref="formRef"
+                @submit.prevent="submit"
+            >
+                <Section>
+                    <form-item label="Логин">
+                        {{ props.user.login }}
+                    </form-item>
+
+                    <form-item label="Пароль">
+                        <q-input
+                            v-model="form.password"
+                            :type="isPassword ? 'password' : 'text'"
+                            :error="form.errors.password"
+                            no-error-icon
+                            outlined
+                            dense
                         >
-                            <q-td key="id" :props="props">
-                                {{ props.row.id }}
-                            </q-td>
-                            <q-td key="login" :props="props">
-                                {{ props.row.login || "-" }}
-                            </q-td>
-                            <q-td key="name" :props="props">
-                                {{ props.row.name || "-" }}
-                            </q-td>
-                            <q-td key="role" :props="props">
-                                {{ rolesNames[props.row.role] }}
-                            </q-td>
-                            <q-td key="partner_name" :props="props">
-                                {{ props.row.partner_name || "-" }}
-                            </q-td>
-                            <q-td key="is_disabled" :props="props">
+                            <template v-slot:append>
                                 <q-icon
-                                    v-if="props.row.is_disabled"
-                                    name="unpublished"
-                                    class="text-negative"
-                                    size="1.1rem"
+                                    :name="isPassword ? 'visibility_off' : 'visibility'"
+                                    class="cursor-pointer"
+                                    @click="isPassword = !isPassword"
                                 />
-                                <q-icon
-                                    v-else
-                                    name="check_circle"
-                                    class="text-positive"
-                                    size="1.1rem"
-                                />
-                            </q-td>
-                            <q-td key="last_activity" :props="props">
-                                {{ props.row.last_activity }}
-                            </q-td>
-                            <q-td key="actions" :props="props">
-                                <q-btn
-                                    flat
-                                    icon="edit_note"
-                                    size="md"
-                                    padding="none"
-                                />
-                            </q-td>
-                        </q-tr>
-                    </template>
-                </q-table>
-            </div>
+                            </template>
+                        </q-input>
+                    </form-item>
 
+                    <form-item label="Имя">
+                        <q-input
+                            v-model="form.name"
+                            :error="!!form.errors.name"
+                            no-error-icon
+                            outlined
+                            dense
+                        >
+                            <template v-slot:error>
+                                Please use maximum 3 characters.
+                            </template>
+                        </q-input>
+                    </form-item>
+
+                    <form-item label="Роль">
+                        <q-select
+                            v-model="form.role"
+                            :options="rolesList"
+                            option-value="id"
+                            option-label="value"
+                            map-options
+                            outlined
+                            dense
+                        />
+                    </form-item>
+
+                    <form-item label="Партнер">
+                        <q-select
+                            v-model="form.partner_id"
+                            :options="partnersList"
+                            option-value="id"
+                            option-label="name"
+                            map-options
+                            use-input
+                            outlined
+                            dense
+                        />
+                    </form-item>
+
+                    <form-item label="Заблокирован">
+                        <q-checkbox v-model="form.is_disabled" />
+                    </form-item>
+
+                    <template #footer>
+                        <q-btn
+                            color="primary"
+                            label="Сохранить"
+                            :unelevated="true"
+                            type="submit"
+                        />
+                    </template>
+                </Section>
+            </q-form>
+        </div>
     </dashboard-layout>
 </template>
-
-<style scoped lang="scss">
-.users-view {
-    .users-table {
-        :deep() {
-            th {
-                font-weight: bold;
-            }
-        }
-
-        .is-admin {
-            background-color: var(--positive-1);
-        }
-
-        .is-disabled {
-            background-color: var(--negative-1);
-        }
-    }
-}
-</style>

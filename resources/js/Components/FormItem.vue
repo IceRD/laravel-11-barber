@@ -31,7 +31,7 @@ const props = defineProps({
 
     .content {
         width: 100%;
-        max-width: 400px;
+        max-width: 300px;
     }
 }
 

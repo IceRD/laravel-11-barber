@@ -47,6 +47,7 @@ const logout = () => router.post(route("logout"))
                 <q-btn-dropdown
                     split
                     flat
+                    no-caps
                     size="md"
                     color="primary"
                     label="Профиль"

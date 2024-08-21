@@ -159,6 +159,10 @@ const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
                     background-color: var(--bg-table);
                 }
             }
+
+            .q-table__top {
+                bottom: 1px solid $separator-color;
+            }
         }
 
         .is-admin {

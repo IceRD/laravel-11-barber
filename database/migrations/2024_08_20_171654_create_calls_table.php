@@ -38,6 +38,8 @@ return new class extends Migration
             $table->boolean('tg_active')->default(false);
 
             $table->timestamps();
+
+            $table->foreign('partner_id')->references('id')->on('partners')->onDelete('cascade');
         });
     }
 

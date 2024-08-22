@@ -1,29 +1,29 @@
 <script setup>
 import { ref } from "vue"
 import DashboardLayout from "@layouts/DashboardLayout.vue"
-import { checkAdminAccount, rolesNames } from "@utils/roles.js"
 import Header from "@components/Header.vue"
-import { router, Link } from "@inertiajs/vue3"
+import { Link, router } from "@inertiajs/vue3"
 
 const props = defineProps({
-    users: {
+    partners: {
         type: Array,
         default: () => ([])
     },
 });
 
-const rows = ref(props.users || [])
+const rows = ref(props.partners || [])
 
 const filter = ref("")
 
 const columns = [
     { name: 'id', align: 'left', label: '#', field: 'id', sortable: true },
-    { name: 'login', align: 'left', label: 'Логин', field: 'login', sortable: true },
-    { name: 'name', align: 'left', label: 'Имя', field: 'name', sortable: true },
-    { name: 'role', align: 'left', label: 'Роль', field: 'role', sortable: true },
-    { name: 'partner_name', align: 'left', label: 'Филиал', field: 'partner_name', sortable: true },
-    { name: 'is_disabled', align: 'center', label: 'Статус', field: 'is_disabled', sortable: true },
-    { name: 'last_activity', align: 'left', label: 'Последняя активность', field: 'last_activity', sortable: true },
+    { name: 'name', align: 'left', label: 'Название филиала', field: 'name', sortable: true },
+    { name: 'organization', align: 'left', label: 'Организация', field: 'organization', sortable: true },
+    { name: 'inn', align: 'left', label: 'ИНН', field: 'inn', sortable: true },
+    { name: 'contract_number', align: 'left', label: 'Номер договора', field: 'contract_number', sortable: true },
+    { name: 'telnums', align: 'center', label: 'Телефон филиала', field: 'telnums', sortable: true },
+    { name: 'yclients_id', align: 'left', label: 'ID филиала', field: 'yclients_id', sortable: true },
+    { name: 'start_at', align: 'left', label: 'Дата открытия', field: 'start_at', sortable: true },
     { name: 'actions', align: 'right', label: 'Действия', field: '', sortable: false },
 ]
 
@@ -35,13 +35,18 @@ const initialPagination = {
     rowsPerPage: 15
 }
 
-const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
+function getFirstTelnum(string) {
+    if (!string) return "-"
+    return JSON.parse(string)[0]?.number
+}
+
+const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { partner }))
 
 </script>
 
 <template>
     <dashboard-layout>
-        <Header title="Список пользователей">
+        <Header title="Список партнеров">
             <q-btn
                 icon="person_add"
                 :unelevated="true"
@@ -49,12 +54,12 @@ const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
                 padding="xs"
             >
                 <q-tooltip>
-                    Добавить пользователя
+                    Добавить партнера
                 </q-tooltip>
             </q-btn>
         </Header>
 
-        <div class="users-view">
+        <div class="partners-view">
             <q-table
                 :rows="rows"
                 :columns="columns"
@@ -62,7 +67,7 @@ const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
                 :filter="filter"
                 row-key="id"
                 flat
-                class="users-table"
+                class="partners-table"
             >
                 <template v-slot:top>
                     <q-btn
@@ -88,7 +93,6 @@ const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
                     <q-tr
                         :props="props"
                         :class="{
-                            'is-admin': checkAdminAccount(props.row.role),
                             'is-disabled': props.row.is_disabled
                         }"
                     >
@@ -96,51 +100,37 @@ const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
                             {{ props.row.id }}
                         </q-td>
 
-                        <q-td key="login" :props="props">
-                            <Link
-                                :href="route('dashboard.users.edit', { user: props.row.id })"
-                                method="get"
-                            >
-                                {{ props.row.login }}
-                            </Link>
-                        </q-td>
-
                         <q-td key="name" :props="props">
-                            {{ props.row.name || "-" }}
-                        </q-td>
-
-                        <q-td key="role" :props="props">
-                            {{ rolesNames[props.row.role] }}
-                        </q-td>
-
-                        <q-td key="partner_name" :props="props">
                             <Link
-                                v-if="props.row.partner_id"
                                 :href="route('dashboard.partners.edit', { partner: props.row.id })"
                                 method="get"
                             >
-                                {{ props.row.partner_name}}
+                                {{ props.row.name }}
                             </Link>
-                            <span v-else> - </span>
                         </q-td>
 
-                        <q-td key="is_disabled" :props="props">
-                            <q-icon
-                                v-if="props.row.is_disabled"
-                                name="unpublished"
-                                class="text-negative"
-                                size="1.1rem"
-                            />
-                            <q-icon
-                                v-else
-                                name="check_circle"
-                                class="text-positive"
-                                size="1.1rem"
-                            />
+                        <q-td key="organization" :props="props">
+                            {{ props.row.organization || "-" }}
                         </q-td>
 
-                        <q-td key="last_activity" :props="props">
-                            {{ props.row.last_activity || "-" }}
+                       <q-td key="inn" :props="props">
+                            {{ props.row.inn || "-" }}
+                        </q-td>
+
+                        <q-td key="contract_number" :props="props">
+                            {{ props.row.contract_number || "-" }}
+                        </q-td>
+
+                        <q-td key="telnums" :props="props">
+                            {{ getFirstTelnum(props.row.telnums) }}
+                        </q-td>
+
+                        <q-td key="yclients_id" :props="props">
+                            {{ props.row.yclients_id || "-" }}
+                        </q-td>
+
+                        <q-td key="start_at" :props="props">
+                            {{ props.row.start_at || "-" }}
                         </q-td>
 
                         <q-td key="actions" :props="props">
@@ -161,8 +151,8 @@ const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
 </template>
 
 <style scoped lang="scss">
-.users-view {
-    .users-table {
+.partners-view {
+    .partners-table {
         background-color: var(--bg-table);
 
         :deep() {
@@ -182,10 +172,6 @@ const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
             .q-table__top {
                 bottom: 1px solid $separator-color;
             }
-        }
-
-        .is-admin {
-            background-color: var(--positive-1);
         }
 
         .is-disabled {

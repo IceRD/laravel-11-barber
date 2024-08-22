@@ -16,7 +16,7 @@ class UserController extends Controller
         $users = User::leftJoin('partners', 'users.partner_id', '=', 'partners.id')
             ->select('users.*', 'partners.name as partner_name', "partners.id as partner_id")
             ->orderBy('id', 'DESC')
-            ->paginate(250);
+            ->get();
 
         return Inertia::render("Dashboard/Users/Users", [
             "users" => $users,
@@ -35,9 +35,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(UserUpdateRequest $request): Response {
-
-        $user = $request->validated();
+    public function update(UserUpdateRequest $request, User $user): Response
+    {
+        $request = $request->validated();
 
         $partners = Partner::select("id", "name", "organization")
             ->orderBy("name")

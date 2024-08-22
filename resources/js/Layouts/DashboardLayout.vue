@@ -93,6 +93,8 @@ const logout = () => router.post(route("logout"))
 
                 <q-list>
                     <sidebar-item :title="'hello'" :show-copy="true" />
+                    <sidebar-item :title="'Пользователи'" @click="router.get(route('dashboard.users.index'))" />
+                    <sidebar-item :title="'Партрены'" @click="router.get(route('dashboard.partners.index'))" />
                 </q-list>
             </q-scroll-area>
         </q-drawer>

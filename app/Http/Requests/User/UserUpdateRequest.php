@@ -18,11 +18,11 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login' => ['required', 'string', 'lowercase', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-            'name' => ['required', 'string', 'max:255'],
-            'password' => ['string', 'max:255', Password::defaults()],
+            'login' => ['required', 'string', 'lowercase', 'max:255', Rule::unique('users')->ignore($this->user->id, 'id')],
+            'name' => ['nullable', 'string', 'min:2', 'max:255'],
+            'password' => ['nullable', 'string', 'max:255', Password::defaults()],
             'role' => ['required', 'string', 'max:50'],
-            'partner_id' => ['integer'],
+            'partner_id' => ['required', 'integer'],
             'is_disabled' => ['required', 'boolean']
         ];
     }

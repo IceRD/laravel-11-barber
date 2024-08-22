@@ -5,8 +5,8 @@ import Header from "@components/Header.vue"
 import Section from "@components/Section.vue"
 import FormItem from "@components/FormItem.vue"
 import { router, useForm } from "@inertiajs/vue3"
-import { rolesList } from "@/utils/roles.js"
-import { errorMessage } from "@/utils/validator.js"
+import { rolesList } from "@utils/roles.js"
+import { errorMessage } from "@utils/validator.js"
 
 const props = defineProps({
     user: {

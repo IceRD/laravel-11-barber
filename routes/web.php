@@ -10,6 +10,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     Route::get('/', function() { return redirect('/dashboard/users'); });
 
     require __DIR__ . '/dashboard/users.php';
+    require __DIR__ . '/dashboard/partners.php';
 });
 
 

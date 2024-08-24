@@ -13,6 +13,15 @@ class Post extends Model
 
     protected $table = "posts";
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
     protected $fillable = [
         "title",
         "description",

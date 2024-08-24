@@ -104,7 +104,7 @@ const goToNew = () => router.get(route("dashboard.users.create"))
                             map-options
                             outlined
                             dense
-                            style="width: 180px"
+                            class="filter-status"
                         />
                     </div>
 
@@ -152,7 +152,7 @@ const goToNew = () => router.get(route("dashboard.users.create"))
                         <q-td key="partner_name" :props="props">
                             <Link
                                 v-if="props.row.partner_id"
-                                :href="route('dashboard.partners.edit', { partner: props.row.id })"
+                                :href="route('dashboard.partners.edit', { partner: props.row.partner_id })"
                                 method="get"
                             >
                                 {{ props.row.partner_name}}
@@ -198,6 +198,10 @@ const goToNew = () => router.get(route("dashboard.users.create"))
 
 <style scoped lang="scss">
 .users-view {
+    .filter-status {
+        width: 180px;
+    }
+
     .users-table {
         background-color: var(--bg-table);
 

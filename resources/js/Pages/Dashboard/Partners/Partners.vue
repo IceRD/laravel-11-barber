@@ -1,8 +1,14 @@
 <script setup>
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import DashboardLayout from "@layouts/DashboardLayout.vue"
 import Header from "@components/Header.vue"
-import { Link, router } from "@inertiajs/vue3"
+import { Link, router, usePage } from "@inertiajs/vue3"
+import { telnumFormat } from "@/utils/helper.js"
+
+
+const $page = usePage()
+
+const isSysAdmin = computed(() => $page.props.auth.isSysAdmin)
 
 const props = defineProps({
     partners: {
@@ -11,9 +17,33 @@ const props = defineProps({
     },
 });
 
-const rows = ref(props.partners || [])
+const partners = computed(() => {
+    return (props.partners || []).map(partner => ({
+        ...partner,
+        telnums: telnumFormat(getFirstTelnum(partner.telnums))
+    }))
+})
+
+const rows = computed(() => {
+    switch (filterStatus.value) {
+        case "active":
+            return partners.value.filter(partner => !partner.disabled)
+        case "disable":
+            return partners.value.filter(partner => partner.disabled)
+        default:
+            return partners.value
+    }
+})
 
 const filter = ref("")
+
+const filterStatus = ref("active")
+
+const statusList = [
+    { "id": "all", "value": "Все" },
+    { "id": "active", "value": "Активные" },
+    { "id": "disable", "value": "Закблокированные" }
+]
 
 const columns = [
     { name: 'id', align: 'left', label: '#', field: 'id', sortable: true },
@@ -36,8 +66,11 @@ const initialPagination = {
 }
 
 function getFirstTelnum(string) {
-    if (!string) return "-"
-    return JSON.parse(string)[0]?.number
+    if (!string) return ""
+    const telnums = JSON.parse(string)
+        .filter(telnum => !!telnum.number)
+
+    return telnums[0]?.number
 }
 
 const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { partner }))
@@ -59,12 +92,29 @@ const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { part
                 class="partners-table"
             >
                 <template v-slot:top>
-                    <q-btn
-                        :unelevated="true"
-                        color="primary"
-                        no-caps
-                        label="Добавить"
-                    />
+                    <div class="row q-gutter-x-md">
+                        <q-btn
+                            v-if="isSysAdmin"
+                            :unelevated="true"
+                            color="primary"
+                            no-caps
+                            label="Добавить"
+                            @click="goToNew"
+                        />
+
+                        <q-select
+                            v-model="filterStatus"
+                            :options="statusList"
+                            label="Статус"
+                            option-value="id"
+                            option-label="value"
+                            emit-value
+                            map-options
+                            outlined
+                            dense
+                            class="filter-status"
+                        />
+                    </div>
 
                     <q-space />
 
@@ -102,7 +152,7 @@ const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { part
                             {{ props.row.organization || "-" }}
                         </q-td>
 
-                       <q-td key="inn" :props="props">
+                        <q-td key="inn" :props="props">
                             {{ props.row.inn || "-" }}
                         </q-td>
 
@@ -111,7 +161,7 @@ const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { part
                         </q-td>
 
                         <q-td key="telnums" :props="props">
-                            {{ getFirstTelnum(props.row.telnums) }}
+                            {{ props.row.telnums || "-" }}
                         </q-td>
 
                         <q-td key="yclients_id" :props="props">
@@ -141,6 +191,10 @@ const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { part
 
 <style scoped lang="scss">
 .partners-view {
+    .filter-status {
+        width: 180px;
+    }
+
     .partners-table {
         background-color: var(--bg-table);
 

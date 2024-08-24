@@ -94,7 +94,7 @@ const goToNew = () => router.get(route("dashboard.posts.create"))
                             map-options
                             outlined
                             dense
-                            style="width: 180px"
+                            class="filter-status"
                         />
                     </div>
 
@@ -172,6 +172,10 @@ const goToNew = () => router.get(route("dashboard.posts.create"))
 
 <style scoped lang="scss">
 .posts-view {
+    .filter-status {
+        width: 180px;
+    }
+
     .posts-table {
         background-color: var(--bg-table);
 

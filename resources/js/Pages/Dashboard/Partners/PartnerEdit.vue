@@ -27,12 +27,14 @@ const form = useForm({
     disabled:        Boolean(props.partner.disabled),
 });
 
-const telnums = computed({
+const telnums = ref(JSON.parse(form.telnums))
+
+const organization = computed({
     get() {
-        return JSON.parse(form.telnums)
+        return form.organization
     },
     set(value) {
-        //form.telnums = value.trim().toLowerCase()
+        form.organization = value.toUpperCase()
     }
 })
 
@@ -70,7 +72,7 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
 
                     <form-item label="Название филиала">
                         <q-input
-                            v-model="form.organization"
+                            v-model="organization"
                             :error="!!form.errors.organization || null"
                             :error-message="errorMessage(form.errors.organization)"
                             no-error-icon
@@ -135,9 +137,9 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
                     </form-item>
 
                     <form-item label="Номера телефонов">
-                        <template v-for="(telnum, index) in telnums">
+                        <template v-for="(_, index) in telnums">
                             <q-input
-                                v-model="telnum.number"
+                                v-model="telnums[index].number"
                                 :error="!!form.errors.telnums || null"
                                 :error-message="errorMessage(form.errors.telnums)"
                                 mask="# (###) ###-##-##"
@@ -149,7 +151,7 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
                             />
 
                             <q-input
-                                v-model="telnum.name"
+                                v-model="telnums[index].name"
                                 :error="!!form.errors.telnums || null"
                                 :error-message="errorMessage(form.errors.telnums)"
                                 no-error-icon
@@ -191,7 +193,7 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
                                             <div class="row items-center justify-end">
                                                 <q-btn
                                                     v-close-popup
-                                                    label="Close"
+                                                    label="Закрыть"
                                                     color="primary"
                                                     flat
                                                 />

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { useQuasar } from "quasar"
+import { useQuasar, copyToClipboard } from "quasar"
 
 const props = defineProps({
     title: {
@@ -17,35 +17,35 @@ const $q = useQuasar()
 const isShowNotify = ref(false)
 
 function copyLink() {
-    if (!navigator.clipboard || isShowNotify.value) return;
-
-    navigator.clipboard.writeText(props.title).then(function() {
-        isShowNotify.value = true
-        $q.notify({
-            icon: "",
-            type: "positive",
-            position: "top",
-            message: "Ссылка успешно скопирована",
-            timeout: 500,
-            group: "copy",
-            onDismiss: () => {
-                isShowNotify.value = false
-            }
+    copyToClipboard(props.title)
+        .then(() => {
+            isShowNotify.value = true
+            $q.notify({
+                icon: "",
+                type: "positive",
+                position: "top",
+                message: "Ссылка успешно скопирована",
+                timeout: 500,
+                group: "copy",
+                onDismiss: () => {
+                    isShowNotify.value = false
+                }
+            })
         })
-    }, function() {
-        isShowNotify.value = true
-        $q.notify({
-            icon: "",
-            type: "negative",
-            position: "top",
-            message: "Ошибка копирования ссылки",
-            timeout: 500,
-            group: "copy",
-            onDismiss: () => {
-                isShowNotify.value = false
-            }
+        .catch(() => {
+            isShowNotify.value = true
+            $q.notify({
+                icon: "",
+                type: "negative",
+                position: "top",
+                message: "Ошибка копирования ссылки",
+                timeout: 500,
+                group: "copy",
+                onDismiss: () => {
+                    isShowNotify.value = false
+                }
+            })
         })
-    });
 }
 </script>
 

@@ -13,3 +13,10 @@ export const notify = {
         timeout: 1000,
     }
 }
+
+export function telnumFormat(phone) {
+    if (!phone) return ""
+    let digitsOnly = phone.replace(/\D/g, "");
+
+    return digitsOnly.replace(/^(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})$/, "$1 ($2) $3-$4-$5")
+}

@@ -46,18 +46,7 @@ const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { part
 
 <template>
     <dashboard-layout>
-        <Header title="Список партнеров">
-            <q-btn
-                icon="person_add"
-                :unelevated="true"
-                no-caps
-                padding="xs"
-            >
-                <q-tooltip>
-                    Добавить партнера
-                </q-tooltip>
-            </q-btn>
-        </Header>
+        <Header title="Список партнеров" />
 
         <div class="partners-view">
             <q-table

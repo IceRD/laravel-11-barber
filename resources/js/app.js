@@ -9,6 +9,7 @@ import { Quasar, Notify } from "quasar"
 import "@quasar/extras/roboto-font/roboto-font.css"
 import "@quasar/extras/material-icons/material-icons.css"
 import "quasar/src/css/index.sass"
+import langRu from "quasar/lang/ru"
 
 // Дополнительные глобальные стили партнера
 import "@partner/styles/app-variables.css"
@@ -29,8 +30,9 @@ createInertiaApp({
             .use(Quasar, {
                 plugins: { Notify },
                 config: {
-                    brand: {}
-                }
+                    brand: {},
+                },
+                lang: langRu
             })
             .mount(el);
     },

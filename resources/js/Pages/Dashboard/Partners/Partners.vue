@@ -53,7 +53,8 @@ const columns = [
     { name: 'contract_number', align: 'left', label: 'Номер договора', field: 'contract_number', sortable: true },
     { name: 'telnums', align: 'center', label: 'Телефон филиала', field: 'telnums', sortable: true },
     { name: 'yclients_id', align: 'left', label: 'ID филиала', field: 'yclients_id', sortable: true },
-    { name: 'start_at', align: 'left', label: 'Дата открытия', field: 'start_at', sortable: true },
+    { name: 'disabled', align: 'center', label: 'Статус', field: 'disabled', sortable: true },
+    { name: 'start_at', align: 'center', label: 'Дата открытия', field: 'start_at', sortable: true },
     { name: 'actions', align: 'right', label: 'Действия', field: '', sortable: false },
 ]
 
@@ -166,6 +167,21 @@ const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { part
 
                         <q-td key="yclients_id" :props="props">
                             {{ props.row.yclients_id || "-" }}
+                        </q-td>
+
+                        <q-td key="disabled" :props="props">
+                            <q-icon
+                                v-if="props.row.disabled"
+                                name="unpublished"
+                                class="text-negative"
+                                size="1.1rem"
+                            />
+                            <q-icon
+                                v-else
+                                name="check_circle"
+                                class="text-positive"
+                                size="1.1rem"
+                            />
                         </q-td>
 
                         <q-td key="start_at" :props="props">

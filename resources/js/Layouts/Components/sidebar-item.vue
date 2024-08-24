@@ -10,6 +10,10 @@ const props = defineProps({
     showCopy: {
         type: Boolean,
         default: false
+    },
+    active: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -50,9 +54,13 @@ function copyLink() {
 </script>
 
 <template>
-    <q-item clickable>
+    <q-item
+        clickable
+        :active="props.active"
+        active-class="text-primary"
+    >
         <q-item-section>
-            {{ title }}
+            <q-item-label>{{ title }}</q-item-label>
         </q-item-section>
         <q-item-section
             v-if="props.showCopy"

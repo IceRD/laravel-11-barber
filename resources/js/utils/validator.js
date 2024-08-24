@@ -1,11 +1,15 @@
-export const require = (val) => !!val || 'Заполните это поле'
+export const rules = {
+    require: (str) => !!str || "Заполните это поле",
+    min: (str, val) => !!str || `Минимальное кол-во символов: ${val}`,
+    max: (str, val) => !!str || `Максимальное кол-во символов: ${val}`,
+}
 
 export function errorMessage(error) {
     switch(error) {
         case "validation.required":
             return "Заполните это поле"
         case "validation.lowercase":
-            return "Заполните должно быть в нижнем регистре"
+            return "Значение должно быть в нижнем регистре"
         case "validation.min.string":
             return "Значение слишком короткое"
         case "validation.max.string":

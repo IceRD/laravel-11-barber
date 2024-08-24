@@ -92,9 +92,15 @@ const logout = () => router.post(route("logout"))
                 </div>
 
                 <q-list>
-                    <sidebar-item :title="'hello'" :show-copy="true" />
-                    <sidebar-item :title="'Пользователи'" @click="router.get(route('dashboard.users.index'))" />
-                    <sidebar-item :title="'Партрены'" @click="router.get(route('dashboard.partners.index'))" />
+                    <sidebar-item title="Новости *" />
+                    <sidebar-item title="Статические страницы *" />
+                    <sidebar-item title="Интеграция с Google документами *" />
+                    <sidebar-item title="Пользователи" @click="router.get(route('dashboard.users.index'))" />
+                    <sidebar-item title="Аналитика *" />
+                    <sidebar-item title="Задачи *" />
+                    <sidebar-item title="Роялти *" />
+                    <sidebar-item title="Партрены" @click="router.get(route('dashboard.partners.index'))" />
+                    <sidebar-item title="Пропущенные звонки *"  />
                 </q-list>
             </q-scroll-area>
         </q-drawer>

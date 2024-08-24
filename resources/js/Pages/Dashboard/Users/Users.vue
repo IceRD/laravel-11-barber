@@ -1,9 +1,14 @@
 <script setup>
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import DashboardLayout from "@layouts/DashboardLayout.vue"
 import { checkAdminAccount, rolesNames } from "@utils/roles.js"
 import Header from "@components/Header.vue"
-import { router, Link } from "@inertiajs/vue3"
+import { router, Link, usePage } from "@inertiajs/vue3"
+
+
+const $page = usePage()
+
+const isSysAdmin = computed(() => $page.props.auth.isSysAdmin)
 
 const props = defineProps({
     users: {
@@ -12,9 +17,33 @@ const props = defineProps({
     },
 });
 
-const rows = ref(props.users || [])
+const users = computed(() => {
+    return (props.users || []).map(user => ({
+        ...user,
+        role: rolesNames[user.role]
+    }))
+})
 
-const filter = ref("")
+const rows = computed(() => {
+    switch (filterStatus.value) {
+        case "active":
+            return users.value.filter(user => !user.is_disabled)
+        case "disable":
+            return users.value.filter(user => user.is_disabled)
+        default:
+            return users.value
+    }
+})
+
+const search = ref("")
+
+const filterStatus = ref("active")
+
+const statusList = [
+    { "id": "all", "value": "Все" },
+    { "id": "active", "value": "Активные" },
+    { "id": "disable", "value": "Закблокированные" }
+]
 
 const columns = [
     { name: 'id', align: 'left', label: '#', field: 'id', sortable: true },
@@ -36,46 +65,53 @@ const initialPagination = {
 }
 
 const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
+const goToNew = () => router.get(route("dashboard.users.create"))
 
 </script>
 
 <template>
     <dashboard-layout>
-        <Header title="Список пользователей">
-            <q-btn
-                icon="person_add"
-                :unelevated="true"
-                no-caps
-                padding="xs"
-            >
-                <q-tooltip>
-                    Добавить пользователя
-                </q-tooltip>
-            </q-btn>
-        </Header>
+        <Header title="Список пользователей" />
 
         <div class="users-view">
             <q-table
                 :rows="rows"
                 :columns="columns"
                 :pagination="initialPagination"
-                :filter="filter"
+                :filter="search"
                 row-key="id"
                 flat
                 class="users-table"
             >
                 <template v-slot:top>
-                    <q-btn
-                        :unelevated="true"
-                        color="primary"
-                        no-caps
-                        label="Добавить"
-                    />
+                    <div class="row q-gutter-x-md">
+                        <q-btn
+                            v-if="isSysAdmin"
+                            :unelevated="true"
+                            color="primary"
+                            no-caps
+                            label="Добавить"
+                            @click="goToNew"
+                        />
+
+                        <q-select
+                            v-model="filterStatus"
+                            :options="statusList"
+                            label="Статус"
+                            option-value="id"
+                            option-label="value"
+                            emit-value
+                            map-options
+                            outlined
+                            dense
+                            style="width: 180px"
+                        />
+                    </div>
 
                     <q-space />
 
                     <q-input
-                        v-model="filter"
+                        v-model="search"
                         label="Поиск"
                         outlined
                         dense
@@ -110,7 +146,7 @@ const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
                         </q-td>
 
                         <q-td key="role" :props="props">
-                            {{ rolesNames[props.row.role] }}
+                            {{ props.row.role || "-" }}
                         </q-td>
 
                         <q-td key="partner_name" :props="props">

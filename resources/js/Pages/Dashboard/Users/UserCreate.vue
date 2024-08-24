@@ -4,23 +4,16 @@ import DashboardLayout from "@layouts/DashboardLayout.vue"
 import Header from "@components/Header.vue"
 import Section from "@components/Section.vue"
 import FormItem from "@components/FormItem.vue"
-import { router, useForm, usePage } from "@inertiajs/vue3"
-import { rolesList, rolesNames } from "@/utils/roles.js"
+import { router, useForm } from "@inertiajs/vue3"
+import { rolesList, roles } from "@/utils/roles.js"
 import { errorMessage } from "@/utils/validator.js"
 import { notify } from "@/utils/helper.js"
 import { useQuasar } from "quasar"
 
 
 const $q = useQuasar()
-const $page = usePage()
-
-const isSysAdmin = computed(() => $page.props.auth.isSysAdmin)
 
 const props = defineProps({
-    user: {
-        type: Object,
-        default: () => ({})
-    },
     partners: {
         type: Array,
         default: () => ([])
@@ -39,12 +32,12 @@ const partnersList = ref([
 ])
 
 const form = useForm({
-    login:       props.user.login,
-    name:        props.user.name,
+    login:       "",
+    name:        "",
     password:    "",
-    role:        props.user.role,
-    partner_id:  props.user.partner_id,
-    is_disabled: Boolean(props.user.is_disabled),
+    role:        roles.user,
+    partner_id:  0,
+    is_disabled: false,
 });
 
 const login = computed({
@@ -59,13 +52,11 @@ const login = computed({
 const isPassword = ref(true)
 
 const submit = () => {
-    form.patch(route("dashboard.users.update", {
-        user: props.user.id,
-    }), {
+    form.post(route("dashboard.users.store"), {
         onSuccess: () => {
             $q.notify({
                 ...notify.success,
-                message: "Пользователь успешно сохранен",
+                message: "Пользователь успешно создан",
             })
         },
     });
@@ -78,11 +69,11 @@ const pathBack = () => router.get(route("dashboard.users.index"))
 <template>
     <dashboard-layout>
         <Header
-            title="Редактирование пользователя"
+            title="Создание пользователя"
             :path-back="pathBack"
         />
 
-        <div class="users-edit-view">
+        <div class="users-create-view">
             <q-form
                 ref="formRef"
                 @submit.prevent="submit"
@@ -93,7 +84,6 @@ const pathBack = () => router.get(route("dashboard.users.index"))
                         :has-error="!!form.errors.login"
                     >
                         <q-input
-                            v-if="isSysAdmin"
                             v-model="login"
                             :error="!!form.errors.login || null"
                             :error-message="errorMessage(form.errors.login)"
@@ -101,8 +91,6 @@ const pathBack = () => router.get(route("dashboard.users.index"))
                             outlined
                             dense
                         />
-
-                        <div v-else> {{ login }} </div>
                     </form-item>
 
                     <form-item
@@ -141,7 +129,6 @@ const pathBack = () => router.get(route("dashboard.users.index"))
 
                     <form-item label="Роль">
                         <q-select
-                            v-if="isSysAdmin"
                             v-model="form.role"
                             :options="rolesList"
                             option-value="id"
@@ -150,7 +137,6 @@ const pathBack = () => router.get(route("dashboard.users.index"))
                             outlined
                             dense
                         />
-                        <div v-else> {{ rolesNames[form.role] }} </div>
                     </form-item>
 
                     <form-item label="Партнер">
@@ -167,11 +153,7 @@ const pathBack = () => router.get(route("dashboard.users.index"))
                     </form-item>
 
                     <form-item label="Заблокирован">
-                        <q-checkbox
-                            v-if="isSysAdmin"
-                            v-model="form.is_disabled"
-                        />
-                        <div v-else> {{ form.is_disabled ? "Да" : "Нет" }} </div>
+                        <q-checkbox v-model="form.is_disabled" />
                     </form-item>
 
                     <template #footer>

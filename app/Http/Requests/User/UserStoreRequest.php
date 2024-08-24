@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 
-class UserUpdateRequest extends FormRequest
+class UserStoreRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,9 +16,9 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login' => ['required', 'string', 'lowercase', 'min:2', 'max:255', Rule::unique('users')->ignore($this->user->id, 'id')],
+            'login' => ['required', 'string', 'lowercase', 'min:2', 'max:255', Rule::unique('users')],
             'name' => ['nullable', 'string', 'min:2', 'max:255'],
-            'password' => ['nullable', 'string', 'min:8', 'max:50'],
+            'password' => ['required', 'string', 'min:8', 'max:50'],
             'role' => ['required', 'string', 'max:50'],
             'partner_id' => ['required', 'integer'],
             'is_disabled' => ['required', 'boolean']

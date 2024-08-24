@@ -29,7 +29,9 @@ a:not([role]) {
 }
 
 .form-item {
-    &+.form-item{
-        margin-top: $flex-gutter-lg;
+    margin-bottom: $flex-gutter-lg;
+    &.has-error {
+        margin-bottom: $flex-gutter-sm;
     }
 }
+

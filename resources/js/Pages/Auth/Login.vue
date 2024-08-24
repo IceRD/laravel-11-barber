@@ -2,7 +2,7 @@
 import { ref, computed } from "vue"
 import { Head, useForm } from "@inertiajs/vue3"
 import { assetsImageUrl } from "@utils/helper.js"
-import { require } from "@utils/validator.js"
+import { rules } from "@utils/validator.js"
 import GuestLayout from "@layouts/GuestLayout.vue"
 
 const form = useForm({
@@ -41,7 +41,7 @@ const submit = () => {
                         v-model="form.login"
                         label="Логин"
                         outlined
-                        :rules="[ require ]"
+                        :rules="[ rules.require ]"
                         no-error-icon
                     />
 
@@ -50,7 +50,7 @@ const submit = () => {
                         :type="isPassword ? 'password' : 'text'"
                         label="Пароль"
                         outlined
-                        :rules="[ require ]"
+                        :rules="[ rules.require ]"
                         no-error-icon
                     >
                         <template v-slot:append>

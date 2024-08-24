@@ -4,24 +4,33 @@ const props = defineProps({
         type: String,
         required: true
     },
+    hasError: {
+        type: Boolean,
+        required: false
+    }
 });
 </script>
 
 <template>
-    <div class="form-item full-width row items-center content-center">
-        <div class="label text-weight-bold">
+    <div
+        class="form-item full-width row justify-start items-start content-start"
+        :class="{ 'has-error': hasError }"
+    >
+        <div class="form-label text-weight-bold">
             {{ label }}
         </div>
 
-        <div class="content">
-            <slot />
+        <div class="form-content row">
+            <div class="col self-center">
+                <slot />
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
 .form-item {
-    .label {
+    .form-label {
         display: flex;
         align-items: center;
         width: 184px;
@@ -29,9 +38,10 @@ const props = defineProps({
         margin-right: 16px;
     }
 
-    .content {
+    .form-content {
         width: 100%;
         max-width: 300px;
+        min-height: 40px;
     }
 }
 

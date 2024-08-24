@@ -170,7 +170,7 @@ const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { part
             }
 
             .q-table__top {
-                bottom: 1px solid $separator-color;
+                border-bottom: 1px solid $separator-color;
             }
         }
 

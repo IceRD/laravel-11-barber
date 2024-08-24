@@ -216,7 +216,7 @@ const goToNew = () => router.get(route("dashboard.users.create"))
             }
 
             .q-table__top {
-                bottom: 1px solid $separator-color;
+                border-bottom: 1px solid $separator-color;
             }
         }
 

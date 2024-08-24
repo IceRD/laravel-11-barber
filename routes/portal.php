@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Post\PostController;
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', [PostController::class, 'index'])->name('portal.post.index');
+    Route::get('/', [PostController::class, 'portalIndex'])->name('portal.post.index');
 });
 
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Call\CallUpdateRequest;
 use App\Models\Call;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,8 +24,14 @@ class CallController extends Controller
         ]);
     }
 
-    public function edit(Call $call): Response
+    public function edit(Request $request): Response
     {
+        $call = Call::leftJoin('partners', 'calls.partner_id', '=', 'partners.id')
+            ->select('calls.*', 'partners.name as partner', 'partners.disabled as disabled')
+            ->where('calls.id', '=', $request->call)
+            ->orderBy('id', 'DESC')
+            ->first();
+
         return Inertia::render("Dashboard/Calls/CallEdit", [
             "call" => $call
         ]);

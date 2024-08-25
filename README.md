@@ -13,10 +13,11 @@ UPDATE users SET role = 'admin' WHERE role == '3';
 #### partners
 copy table partners to _partners
 ```
+START TRANSACTION;
 INSERT INTO `partners` (
     `id`,
     `organization`,
-    `inn`,	
+    `inn`,
     `name`,
     `contract_number`,
     `email`,
@@ -26,42 +27,43 @@ INSERT INTO `partners` (
     `yclients_id`,
     `disabled`
 )
-SELECT
-    `id`,
-    `organization`,
-    `inn`,	
-    `name`,
-    `contract_number`,
-    `email`,
-    `telnums`,
-    `address`,
-    `start_at`,
-    `yclients_id`,
-    `disabled`
-FROM
-	`_partners`
-```
+    SELECT
+        `id`,
+        `organization`,
+        `inn`,
+        `name`,
+        `contract_number`,
+        `email`,
+        `telnums`,
+        `address`,
+        `start_at`,
+        `yclients_id`,
+        `disabled`
+    FROM
+        `_partners`;
 
-```
 INSERT INTO `calls` (
     `partner_id`,
-    `mango_telnum`,	
+    `mango_telnum`,
     `lost_client_days`,
     `repeat_client_days`,
     `new_client_days`,
     `pay_end`,
     `tg_chat_id`,
-    `tg_active`
+    `tg_disabled`
 )
 SELECT
     `id` as `partner_id`,
-    `mango_telnum`,	
+    `mango_telnum`,
     `lost_client_days`,
     `repeat_client_days`,
     `new_client_days`,
     `tg_pay_end` as `pay_end`,
     `tg_chat_id`,
-    `tg_active`
+    `tg_active` as `tg_disabled`
 FROM
-	`_partners`
+    `_partners`;
+
+UPDATE `calls` SET `tg_disabled` = NOT `tg_disabled`;
+COMMIT;
 ```

@@ -112,7 +112,11 @@ const logout = () => router.post(route("logout"))
                         @click="router.get(route('dashboard.partners.index'))"
                         :active="$page.component.startsWith('Dashboard/Partners')"
                     />
-                    <sidebar-item title="Пропущенные звонки *"  />
+                    <sidebar-item
+                        title="Пропущенные звонки"
+                        @click="router.get(route('dashboard.calls.index'))"
+                        :active="$page.component.startsWith('Dashboard/Calls')"
+                    />
                 </q-list>
             </q-scroll-area>
         </q-drawer>

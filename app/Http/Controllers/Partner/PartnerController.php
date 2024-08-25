@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\PartnerStoreRequest;
-use App\Http\Requests\Partner\PartnerUpdateRequest;
+use App\Http\Requests\Partner\CallUpdateRequest;
 use App\Models\Partner;
 use App\Models\Call;
 use Illuminate\Http\RedirectResponse;
@@ -40,7 +40,7 @@ class PartnerController extends Controller
         ]);
     }
 
-    public function update(PartnerUpdateRequest $request, Partner $partner): RedirectResponse
+    public function update(CallUpdateRequest $request, Partner $partner): RedirectResponse
     {
         $validated = $request->validated();
 

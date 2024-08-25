@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('tg_chat_id')->nullable();
 
             // Статус телеграма вкл/выкл
-            $table->boolean('tg_active')->default(false);
+            $table->boolean('tg_disabled')->default(true);
 
             $table->timestamps();
             $table->softDeletes();

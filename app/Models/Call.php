@@ -22,7 +22,7 @@ class Call extends Model
         "new_client_days",
         "pay_end",
         "tg_chat_id",
-        "tg_active"
+        "tg_disabled"
     ];
 
     public function partner(): HasOne

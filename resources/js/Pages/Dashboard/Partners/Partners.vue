@@ -75,6 +75,7 @@ function getFirstTelnum(string) {
 }
 
 const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { partner }))
+const goToNew = () => router.get(route("dashboard.partners.create"))
 
 </script>
 
@@ -133,7 +134,7 @@ const goToEdit = (partner) => router.get(route("dashboard.partners.edit", { part
                     <q-tr
                         :props="props"
                         :class="{
-                            'is-disabled': props.row.is_disabled
+                            'is-disabled': props.row.disabled
                         }"
                     >
                         <q-td key="id" :props="props">

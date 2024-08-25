@@ -13,5 +13,5 @@ Route::group(['prefix' => 'partners'], function () {
     });
 
     Route::get('/{partner}', [PartnerController::class, 'edit'])->name('dashboard.partners.edit');
-    Route::post('/{partner}', [PartnerController::class, 'update'])->name('dashboard.partners.update');
+    Route::patch('/{partner}', [PartnerController::class, 'update'])->name('dashboard.partners.update');
 });

@@ -15,8 +15,10 @@ class UserStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $unique = Rule::unique('users');
+
         return [
-            'login' => ['required', 'string', 'lowercase', 'min:2', 'max:255', Rule::unique('users')],
+            'login' => ['required', 'string', 'lowercase', 'min:2', 'max:255', $unique],
             'name' => ['nullable', 'string', 'min:2', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'max:50'],
             'role' => ['required', 'string', 'max:50'],

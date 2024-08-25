@@ -8,32 +8,24 @@ import { router, useForm, usePage } from "@inertiajs/vue3"
 import { errorMessage } from "@utils/validator.js"
 import { notify } from "@/utils/helper.js"
 import { useQuasar } from "quasar"
-import { addTelnumItem, maxTelnums } from "./utils/partners.js"
+import {addTelnumItem, defaulTelnumItem, maxTelnums} from "./utils/partners.js"
 
 
 const $q = useQuasar()
-const $page = usePage()
 
-const isSysAdmin = computed(() => $page.props.auth.isSysAdmin)
-
-const props = defineProps({
-    partner: {
-        type: Object,
-        default: () => ([])
-    }
-});
+const telnumItem = defaulTelnumItem()
 
 const form = useForm({
-    name:            props.partner.name,
-    organization:    props.partner.organization,
-    inn:             props.partner.inn,
-    contract_number: props.partner.contract_number,
-    email:           props.partner.email,
-    telnums:         props.partner.telnums,
-    address:         props.partner.address,
-    yclients_id:     props.partner.yclients_id,
-    start_at:        props.partner.start_at,
-    disabled:        Boolean(props.partner.disabled),
+    name:            "",
+    organization:    "",
+    inn:             "",
+    contract_number: "",
+    email:           "",
+    telnums:         [telnumItem],
+    address:         "",
+    yclients_id:     "",
+    start_at:        "",
+    disabled:        false,
 });
 
 const organization = computed({
@@ -50,13 +42,11 @@ function addTelnum() {
 }
 
 const submit = () => {
-    form.patch(route("dashboard.partners.update", {
-        partner: props.partner.id,
-    }), {
+    form.post(route("dashboard.partners.store"), {
         onSuccess: () => {
             $q.notify({
                 ...notify.success,
-                message: "Партнер успешно сохранен",
+                message: "Партнер успешно создан",
             })
         },
     });
@@ -69,11 +59,11 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
 <template>
     <dashboard-layout>
         <Header
-            title="Редактирование партнера"
+            title="Добавить партнера"
             :path-back="pathBack"
         />
 
-        <div class="partner-edit-view">
+        <div class="partner-create-view">
             <q-form
                 ref="formRef"
                 @submit.prevent="submit"
@@ -147,7 +137,6 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
 
                     <form-item label="Yclients ID">
                         <q-input
-                            v-if="isSysAdmin"
                             v-model="form.yclients_id"
                             :error="!!form.errors.yclients_id || null"
                             :error-message="errorMessage(form.errors.yclients_id)"
@@ -155,7 +144,6 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
                             outlined
                             dense
                         />
-                        <div v-else> {{ form.yclients_id }} </div>
                     </form-item>
 
                     <form-item label="Номера телефонов">
@@ -206,7 +194,6 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
 
                     <form-item label="Дата подписания">
                         <q-input
-                            v-if="isSysAdmin"
                             v-model="form.start_at"
                             :error="!!form.errors.start_at || null"
                             :error-message="errorMessage(form.errors.start_at)"
@@ -241,15 +228,10 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
                                 </q-icon>
                             </template>
                         </q-input>
-                        <div v-else> {{ form.start_at || "Договор еще не заключен" }} </div>
                     </form-item>
 
                     <form-item label="Заблокирован">
-                        <q-checkbox
-                            v-if="isSysAdmin"
-                            v-model="form.disabled"
-                        />
-                        <div v-else> {{ form.disabled ? "Да" : "Нет" }} </div>
+                        <q-checkbox v-model="form.disabled" />
                     </form-item>
 
                     <template #footer>
@@ -267,7 +249,7 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
 </template>
 
 <style scoped lang="scss">
-.partner-edit-view {
+.partner-create-view {
     .telnums {
         text-align: center;
 

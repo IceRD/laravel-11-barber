@@ -14,6 +14,15 @@ class Partner extends Model
 
     protected $table = "partners";
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'pay_end' => 'datetime:Y-m-d H:i:s',
+    ];
+
     protected $fillable = [
         "organization",
         "inn",

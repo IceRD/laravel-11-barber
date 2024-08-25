@@ -38,6 +38,7 @@ return new class extends Migration
             $table->boolean('tg_active')->default(false);
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('partner_id')->references('id')->on('partners')->onDelete('cascade');
         });

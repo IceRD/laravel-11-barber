@@ -16,8 +16,16 @@ const props = defineProps({
         class="form-item full-width row justify-start items-start content-start"
         :class="{ 'has-error': hasError }"
     >
-        <div class="form-label text-weight-bold">
-            {{ label }}
+        <div class="form-label column">
+            <div class="text-weight-bold">
+                {{ label }}
+            </div>
+            <div
+                v-if="$slots.second"
+                class="q-mt-md"
+            >
+                <slot name="second" />
+            </div>
         </div>
 
         <div class="form-content row">
@@ -32,15 +40,15 @@ const props = defineProps({
 .form-item {
     .form-label {
         display: flex;
-        align-items: center;
         width: 184px;
         min-height: 40px;
         margin-right: 16px;
+        padding-top: 8px;
     }
 
     .form-content {
-        width: 100%;
         max-width: 300px;
+        min-width: 300px;
         min-height: 40px;
     }
 }

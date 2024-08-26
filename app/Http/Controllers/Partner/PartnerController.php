@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\PartnerStoreRequest;
-use App\Http\Requests\Partner\CallUpdateRequest;
 use App\Models\Partner;
 use App\Models\Call;
 use Illuminate\Http\RedirectResponse;

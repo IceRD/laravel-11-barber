@@ -98,7 +98,11 @@ const logout = () => router.post(route("logout"))
                         :active="$page.component.startsWith('Dashboard/Posts')"
                     />
                     <sidebar-item title="Статические страницы *" />
-                    <sidebar-item title="Интеграция с Google документами *" />
+                    <sidebar-item
+                        title="Интеграция с Google документами"
+                        @click="router.get(route('dashboard.sheets.index'))"
+                        :active="$page.component.startsWith('Dashboard/Sheets')"
+                    />
                     <sidebar-item
                         title="Пользователи"
                         @click="router.get(route('dashboard.users.index'))"

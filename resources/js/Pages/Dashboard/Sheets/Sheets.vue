@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref } from "vue"
 import DashboardLayout from "@layouts/DashboardLayout.vue"
-import { checkAdminAccount, rolesNames } from "@utils/roles.js"
 import Header from "@components/Header.vue"
 import { router, Link, usePage } from "@inertiajs/vue3"
 
@@ -11,27 +10,20 @@ const $page = usePage()
 const isSysAdmin = computed(() => $page.props.auth.isSysAdmin)
 
 const props = defineProps({
-    users: {
+    sheets: {
         type: Array,
         default: () => ([])
     },
 });
 
-const users = computed(() => {
-    return (props.users || []).map(user => ({
-        ...user,
-        role: rolesNames[user.role]
-    }))
-})
-
 const rows = computed(() => {
     switch (filterStatus.value) {
         case "active":
-            return users.value.filter(user => !user.is_disabled)
+            return props.sheets.filter(sheet => !sheet.disabled)
         case "disable":
-            return users.value.filter(user => user.is_disabled)
+            return props.sheets.filter(sheet => sheet.disabled)
         default:
-            return users.value
+            return props.sheets
     }
 })
 
@@ -47,12 +39,10 @@ const statusList = [
 
 const columns = [
     { name: 'id', align: 'left', label: '#', field: 'id', sortable: true },
-    { name: 'login', align: 'left', label: 'Логин', field: 'login', sortable: true },
-    { name: 'name', align: 'left', label: 'Имя', field: 'name', sortable: true },
-    { name: 'role', align: 'left', label: 'Роль', field: 'role', sortable: true },
-    { name: 'partner_name', align: 'left', label: 'Филиал', field: 'partner_name', sortable: true },
-    { name: 'is_disabled', align: 'center', label: 'Статус', field: 'is_disabled', sortable: true },
-    { name: 'last_activity', align: 'left', label: 'Последняя активность', field: 'last_activity', sortable: true },
+    { name: 'title', align: 'left', label: 'Заголовок', field: 'title', sortable: true },
+    { name: 'slug', align: 'left', label: 'Ссылка', field: 'slug', sortable: true },
+    { name: 'disabled', align: 'center', label: 'Статус', field: 'disabled', sortable: true },
+    { name: 'created_at', align: 'center', label: 'Дата создания', field: 'created_at', sortable: true },
     { name: 'actions', align: 'right', label: 'Действия', field: '', sortable: false },
 ]
 
@@ -64,16 +54,16 @@ const initialPagination = {
     rowsPerPage: 15
 }
 
-const goToEdit = (user) => router.get(route("dashboard.users.edit", { user }))
-const goToNew = () => router.get(route("dashboard.users.create"))
+const goToEdit = (sheet) => router.get(route("dashboard.sheets.edit", { sheet }))
+const goToNew = () => router.get(route("dashboard.sheets.create"))
 
 </script>
 
 <template>
     <dashboard-layout>
-        <Header title="Пользователи" />
+        <Header title="Интеграция с Google документами" />
 
-        <div class="users-view">
+        <div class="sheets-view">
             <q-table
                 :rows="rows"
                 :columns="columns"
@@ -81,7 +71,7 @@ const goToNew = () => router.get(route("dashboard.users.create"))
                 :filter="search"
                 row-key="id"
                 flat
-                class="users-table"
+                class="sheets-table"
             >
                 <template v-slot:top>
                     <div class="row q-gutter-x-md">
@@ -124,45 +114,34 @@ const goToNew = () => router.get(route("dashboard.users.create"))
                     <q-tr
                         :props="props"
                         :class="{
-                            'is-admin': checkAdminAccount(props.row.role),
-                            'is-disabled': props.row.is_disabled
+                            'is-disabled': props.row.disabled
                         }"
                     >
                         <q-td key="id" :props="props">
                             {{ props.row.id }}
                         </q-td>
 
-                        <q-td key="login" :props="props">
+                        <q-td key="title" :props="props">
                             <Link
-                                :href="route('dashboard.users.edit', { user: props.row.id })"
+                                :href="route('dashboard.sheets.edit', { sheet: props.row.id })"
                                 method="get"
                             >
-                                {{ props.row.login }}
+                                {{ props.row.title }}
                             </Link>
                         </q-td>
 
-                        <q-td key="name" :props="props">
-                            {{ props.row.name || "-" }}
-                        </q-td>
-
-                        <q-td key="role" :props="props">
-                            {{ props.row.role || "-" }}
-                        </q-td>
-
-                        <q-td key="partner_name" :props="props">
+                        <q-td key="slug" :props="props">
                             <Link
-                                v-if="props.row.partner_id"
-                                :href="route('dashboard.partners.edit', { partner: props.row.partner_id })"
+                                :href="route('portal.sheets.index', { sheet: props.row.slug })"
                                 method="get"
                             >
-                                {{ props.row.partner_name}}
+                                {{ props.row.slug }}
                             </Link>
-                            <span v-else> - </span>
                         </q-td>
 
-                        <q-td key="is_disabled" :props="props">
+                        <q-td key="disabled" :props="props">
                             <q-icon
-                                v-if="props.row.is_disabled"
+                                v-if="props.row.disabled"
                                 name="unpublished"
                                 class="text-negative"
                                 size="1.1rem"
@@ -175,8 +154,8 @@ const goToNew = () => router.get(route("dashboard.users.create"))
                             />
                         </q-td>
 
-                        <q-td key="last_activity" :props="props">
-                            {{ props.row.last_activity || "-" }}
+                        <q-td key="created_at" :props="props">
+                            {{ props.row.created_at || "-" }}
                         </q-td>
 
                         <q-td key="actions" :props="props">
@@ -197,12 +176,12 @@ const goToNew = () => router.get(route("dashboard.users.create"))
 </template>
 
 <style scoped lang="scss">
-.users-view {
+.sheets-view {
     .filter-status {
         width: 180px;
     }
 
-    .users-table {
+    .sheets-table {
         background-color: var(--bg-table);
 
         :deep() {
@@ -222,10 +201,6 @@ const goToNew = () => router.get(route("dashboard.users.create"))
             .q-table__top {
                 border-bottom: 1px solid $separator-color;
             }
-        }
-
-        .is-admin {
-            background-color: var(--positive-1);
         }
 
         .is-disabled {

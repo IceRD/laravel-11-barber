@@ -81,7 +81,7 @@ const goToNew = () => router.get(route("dashboard.partners.create"))
 
 <template>
     <dashboard-layout>
-        <Header title="Список партнеров" />
+        <Header title="Партнеры" />
 
         <div class="partners-view">
             <q-table

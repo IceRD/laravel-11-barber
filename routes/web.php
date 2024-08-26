@@ -13,6 +13,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     require __DIR__ . '/dashboard/posts.php';
     require __DIR__ . '/dashboard/partners.php';
     require __DIR__ . '/dashboard/calls.php';
+    require __DIR__ . '/dashboard/sheets.php';
 });
 
 

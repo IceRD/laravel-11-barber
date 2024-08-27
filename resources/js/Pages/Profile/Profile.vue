@@ -82,7 +82,7 @@ const submit = () => {
                         />
                     </form-item>
 
-                    <form-item label="Подтвердить пароль">
+                    <form-item label="Подтвердите пароль">
                         <q-input
                             v-model="form.password_confirmation"
                             :error="!!form.errors.password_confirmation || null"

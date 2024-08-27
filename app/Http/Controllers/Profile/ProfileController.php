@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Profile;
 
+use App\Http\Requests\Profile\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
@@ -16,13 +16,9 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Profile');
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'min:8', 'max:50', 'confirmed'],
-            'password_confirmation' => ['required', 'min:8', 'max:50'],
-        ]);
+        $validated = $request->validated();
 
         $request->user()->update([
             'password' => Hash::make($validated['password']),

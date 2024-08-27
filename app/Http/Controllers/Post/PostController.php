@@ -9,7 +9,6 @@ use Inertia\Response;
 
 class PostController extends Controller
 {
-
     public function index(): Response
     {
         $posts = Post::select('id', 'title', 'is_published', 'created_at')
@@ -33,12 +32,12 @@ class PostController extends Controller
     }
 
     public function create(): Response {
-
+        // Создание записи
 
         return Inertia::render('Dashboard/Posts/PostCreate');
     }
 
-    public function portalIndex(): Response
+    public function list(): Response
     {
         $posts = Post::where('is_published', '=', 1)
             ->orderBy('id', 'DESC')

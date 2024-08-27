@@ -54,7 +54,7 @@ class SheetController extends Controller
         return to_route('dashboard.sheets.index');
     }
 
-    public function portalIndex(Sheet $sheet): Response
+    public function show(Sheet $sheet): Response
     {
         return Inertia::render("Portal/Sheets/Sheet", [
             "sheet" => $sheet

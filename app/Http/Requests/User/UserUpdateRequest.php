@@ -18,7 +18,7 @@ class UserUpdateRequest extends FormRequest
         return [
             'login' => ['required', 'string', 'lowercase', 'min:2', 'max:255', Rule::unique('users')->ignore($this->user->id, 'id')],
             'name' => ['nullable', 'string', 'min:2', 'max:255'],
-            'password' => ['nullable', 'string', 'min:8', 'max:50'],
+            'password' => ['nullable', 'min:8', 'max:50'],
             'role' => ['required', 'string', 'max:50'],
             'partner_id' => ['required', 'integer'],
             'is_disabled' => ['required', 'boolean']

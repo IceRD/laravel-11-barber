@@ -35,3 +35,6 @@ a:not([role]) {
     }
 }
 
+.section + .section {
+    margin-top: $flex-gutter-md;
+}

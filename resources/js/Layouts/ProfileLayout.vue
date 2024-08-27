@@ -1,12 +1,13 @@
 <script setup>
 import { ref, onMounted } from "vue"
-import { usePage } from "@inertiajs/vue3"
+import { router, usePage } from "@inertiajs/vue3"
 import { assetsImageUrl } from "@/utils/helper.js"
 import { checkAdminAccount } from "@/utils/roles.js"
 import SidebarItem from "@/Layouts/Components/sidebar-item.vue"
 import {
     dashboard,
     profile,
+    portal,
     logout
 } from "@/utils/routes.js"
 
@@ -54,6 +55,16 @@ function toggleLeftDrawer() {
                 >
                     <q-list>
                         <q-item
+                            clickable
+                            v-close-popup
+                            @click="portal"
+                        >
+                            <q-item-section>
+                                <q-item-label>Портал</q-item-label>
+                            </q-item-section>
+                        </q-item>
+
+                        <q-item
                             v-if="isAdminAccount"
                             clickable
                             v-close-popup
@@ -91,15 +102,19 @@ function toggleLeftDrawer() {
                 </div>
 
                 <q-list>
-                    <sidebar-item :title="'hello'" :show-copy="true" />
+                    <sidebar-item
+                        title="Профиль пользователя"
+                        @click="router.get(route('profile.index'))"
+                        :active="$page.component.startsWith('Profile/Profile')"
+                    />
                 </q-list>
             </q-scroll-area>
         </q-drawer>
 
         <q-page-container>
-          <div class="q-px-xl q-pb-xl">
-            <slot />
-          </div>
+            <div class="q-px-xl q-pb-xl">
+                <slot />
+            </div>
         </q-page-container>
     </q-layout>
 </template>

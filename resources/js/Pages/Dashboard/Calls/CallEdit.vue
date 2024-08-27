@@ -182,6 +182,7 @@ const pathBack = () => router.get(route("dashboard.calls.index"))
                             label="Сохранить"
                             :unelevated="true"
                             type="submit"
+                            :disabled="form.processing"
                         />
                     </template>
                 </Section>

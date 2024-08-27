@@ -240,6 +240,7 @@ const pathBack = () => router.get(route("dashboard.partners.index"))
                             label="Сохранить"
                             :unelevated="true"
                             type="submit"
+                            :disabled="form.processing"
                         />
                     </template>
                 </Section>

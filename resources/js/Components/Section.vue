@@ -1,5 +1,9 @@
 <script setup>
 const props = defineProps({
+    title: {
+        type: String,
+        default: ""
+    },
     classContent: {
         type: String,
         default: ""
@@ -13,6 +17,13 @@ const props = defineProps({
 
 <template>
     <div class="section">
+        <div
+            v-if="props.title"
+            class="q-px-md q-pt-md"
+        >
+            <h3 class="text-h6 text-weight-bold q-my-none"> {{ props.title }} </h3>
+        </div>
+
         <div
             class="section-content q-pa-md"
             :class="classContent"

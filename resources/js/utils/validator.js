@@ -16,6 +16,8 @@ export function errorMessage(error) {
             return "Значение слишком длинное"
         case "validation.unique":
             return "Значение должно быть уникальным"
+        case "validation.current_password":
+            return "Значение не соответствует текущему паролю"
         case "validation.string":
         case "validation.integer":
         case "validation.boolean":

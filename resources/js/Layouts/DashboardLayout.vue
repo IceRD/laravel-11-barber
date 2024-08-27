@@ -3,8 +3,12 @@ import { ref, onMounted } from "vue"
 import { router, usePage } from "@inertiajs/vue3"
 import { assetsImageUrl } from "@/utils/helper.js"
 import { checkAdminAccount } from "@/utils/roles.js"
-import SidebarItem from "@/Layouts/Components/sidebar-item.vue";
-
+import SidebarItem from "@/Layouts/Components/sidebar-item.vue"
+import {
+    profile,
+    portal,
+    logout
+} from "@/utils/routes.js"
 
 onMounted(() => {
     const { props } = usePage()
@@ -19,11 +23,6 @@ const leftDrawerOpen = ref(true)
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value
 }
-
-const goToProfile = () => router.get(route("profile.index"))
-const goToPortal = () => router.get(route("portal.post.index"))
-const logout = () => router.post(route("logout"))
-
 </script>
 
 <template>
@@ -51,14 +50,14 @@ const logout = () => router.post(route("logout"))
                     size="md"
                     color="primary"
                     label="Профиль"
-                    @click="goToProfile"
+                    @click="profile"
                 >
                     <q-list>
                         <q-item
                             v-if="isAdminAccount"
                             clickable
                             v-close-popup
-                            @click="goToPortal"
+                            @click="portal"
                         >
                             <q-item-section>
                                 <q-item-label>Портал</q-item-label>

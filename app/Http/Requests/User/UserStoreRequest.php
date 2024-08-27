@@ -20,7 +20,7 @@ class UserStoreRequest extends FormRequest
         return [
             'login' => ['required', 'string', 'lowercase', 'min:2', 'max:255', $unique],
             'name' => ['nullable', 'string', 'min:2', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'max:50'],
+            'password' => ['required', 'min:8', 'max:50'],
             'role' => ['required', 'string', 'max:50'],
             'partner_id' => ['required', 'integer'],
             'is_disabled' => ['required', 'boolean']

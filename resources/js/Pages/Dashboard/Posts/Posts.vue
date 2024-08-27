@@ -61,7 +61,7 @@ const goToNew = () => router.get(route("dashboard.posts.create"))
 
 <template>
     <dashboard-layout>
-        <Header title="Список новостей" />
+        <Header title="Новости" />
 
         <div class="posts-view">
             <q-table
